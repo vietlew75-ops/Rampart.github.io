@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luật lệ | Rampart SMP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #f1f5f9; }
+        .glass { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .bg-grid { background-image: radial-gradient(circle at 2px 2px, rgba(14, 165, 233, 0.08) 1px, transparent 0); background-size: 40px 40px; }
+        .rule-card:hover { border-color: rgba(14, 165, 233, 0.4); transform: translateY(-4px); }
+    </style>
+</head>
+<body class="antialiased overflow-x-hidden bg-grid">
+
+    <nav id="navbar" class="fixed top-0 w-full z-50 glass py-4 shadow-2xl">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center gap-2 group cursor-pointer" onclick="window.location.href='index.html'">
+                <div class="w-10 h-10 bg-sky-500 rounded-lg flex items-center justify-center shadow-lg shadow-sky-500/20 group-hover:scale-110 transition-transform">
+                    <i data-lucide="server" class="text-white w-6 h-6"></i>
+                </div>
+                <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white to-sky-400 bg-clip-text text-transparent">RAMPART <span class="text-sky-400">SMP</span></span>
+            </div>
+            
+            <!-- Desktop Nav -->
+            <div class="hidden md:flex items-center gap-8">
+                <a href="index.html#home" class="flex items-center gap-1.5 text-sm font-medium text-slate-400 hover:text-sky-400 transition-colors"><i data-lucide="home" class="w-4 h-4"></i> Trang chủ</a>
+                <a href="index.html#features" class="flex items-center gap-1.5 text-sm font-medium text-slate-400 hover:text-sky-400 transition-colors"><i data-lucide="sparkles" class="w-4 h-4"></i> Tính năng</a>
+                <a href="rules.html" class="flex items-center gap-1.5 text-sm font-medium text-sky-400 transition-colors"><i data-lucide="gavel" class="w-4 h-4"></i> Luật lệ</a>
+                <a href="index.html#community" class="flex items-center gap-1.5 text-sm font-medium text-slate-400 hover:text-sky-400 transition-colors"><i data-lucide="users-2" class="w-4 h-4"></i> Cộng đồng</a>
+                <button onclick="window.location.href='index.html#home'" class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-sky-500 hover:bg-sky-400 text-white text-sm font-semibold transition-all shadow-lg shadow-sky-500/25 active:scale-95"><i data-lucide="play-circle" class="w-4 h-4"></i> Tham gia ngay</button>
+            </div>
+
+            <button class="md:hidden text-slate-200" id="menu-btn"><i data-lucide="menu" id="menu-icon"></i></button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden glass absolute top-full left-0 w-full border-t border-white/10 p-6 flex flex-col gap-4">
+            <a href="index.html#home" class="flex items-center gap-3 text-lg font-medium text-slate-300 py-2" onclick="toggleMenu()"><i data-lucide="home" class="w-5 h-5 text-sky-400"></i> Trang chủ</a>
+            <a href="index.html#features" class="flex items-center gap-3 text-lg font-medium text-slate-300 py-2" onclick="toggleMenu()"><i data-lucide="sparkles" class="w-5 h-5 text-sky-400"></i> Tính năng</a>
+            <a href="rules.html" class="flex items-center gap-3 text-lg font-medium text-sky-400 py-2" onclick="toggleMenu()"><i data-lucide="gavel" class="w-5 h-5 text-sky-400"></i> Luật lệ</a>
+            <a href="index.html#community" class="flex items-center gap-3 text-lg font-medium text-slate-300 py-2" onclick="toggleMenu()"><i data-lucide="users-2" class="w-5 h-5 text-sky-400"></i> Cộng đồng</a>
+            <button onclick="window.location.href='index.html#home'; toggleMenu();" class="flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-sky-500 text-white font-bold"><i data-lucide="play-circle" class="w-5 h-5"></i> Tham gia ngay</button>
+        </div>
+    </nav>
+
+    <section class="pt-40 pb-24 px-6">
+        <div class="container mx-auto max-w-5xl">
+            <div class="text-center mb-16">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border-sky-500/30 text-sky-400 text-xs font-bold tracking-widest uppercase mb-6">
+                    <i data-lucide="gavel" class="w-4 h-4"></i> Nội quy máy chủ
+                </div>
+                <h1 class="text-4xl md:text-6xl font-black mb-6 text-white tracking-tight">Luật lệ Rampart SMP</h1>
+                <p class="text-slate-400 text-lg max-w-2xl mx-auto leading-relaxed">Để đảm bảo một môi trường chơi game công bằng và văn minh, vui lòng tuân thủ các quy định dưới đây.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Group 1 -->
+                <div class="glass p-8 rounded-[2.5rem] border-white/5 rule-card transition-all duration-300">
+                    <div class="w-14 h-14 bg-sky-500/20 rounded-2xl flex items-center justify-center text-sky-400 mb-6">
+                        <i data-lucide="shield-alert" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-6">Quy định chung</h3>
+                    <ul class="space-y-4 text-slate-400 leading-relaxed">
+                        <li class="flex gap-4"><span class="text-sky-500 font-bold">01.</span> Nghiêm cấm sử dụng hack, cheat, mod gian lận (X-ray, Fly, KillAura...).</li>
+                        <li class="flex gap-4"><span class="text-sky-500 font-bold">02.</span> Không lợi dụng lỗi (bug) game để trục lợi. Thấy lỗi hãy báo Admin.</li>
+                        <li class="flex gap-4"><span class="text-sky-500 font-bold">03.</span> Không quảng cáo server khác dưới mọi hình thức.</li>
+                    </ul>
+                </div>
+
+                <!-- Group 2 -->
+                <div class="glass p-8 rounded-[2.5rem] border-white/5 rule-card transition-all duration-300">
+                    <div class="w-14 h-14 bg-sky-500/20 rounded-2xl flex items-center justify-center text-sky-400 mb-6">
+                        <i data-lucide="message-circle" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-6">Văn hóa ứng xử</h3>
+                    <ul class="space-y-4 text-slate-400 leading-relaxed">
+                        <li class="flex gap-4"><span class="text-sky-500 font-bold">01.</span> Tôn trọng mọi người. Không toxic, chửi thề hoặc lăng mạ người khác.</li>
+                        <li class="flex gap-4"><span class="text-sky-500 font-bold">02.</span> Không spam chat, không viết hoa toàn bộ tin nhắn gây loãng kênh chung.</li>
+                        <li class="flex gap-4"><span class="text-sky-500 font-bold">03.</span> Giải quyết mâu thuẫn cá nhân một cách văn minh, không kéo bè phái.</li>
+                    </ul>
+                </div>
+
+                <!-- Group 3 -->
+                <div class="glass p-8 rounded-[2.5rem] border-white/5 rule-card transition-all duration-300">
+                    <div class="w-14 h-14 bg-sky-500/20 rounded-2xl flex items-center justify-center text-sky-400 mb-6">
+                        <i data-lucide="axe" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-6">Xây dựng & Lối chơi</h3>
+                    <ul class="space-y-4 text-slate-400 leading-relaxed">
+                        <li class="flex gap-4"><span class="text-sky-500 font-bold">01.</span> Cấm phá hoại công trình (Griefing) của người chơi khác.</li>
+                        <li class="flex gap-4"><span class="text-sky-500 font-bold">02.</span> Không xây dựng các máy farm gây lag hoặc các công trình phản cảm.</li>
+                        <li class="flex gap-4"><span class="text-sky-500 font-bold">03.</span> Tôn trọng khu vực claim của hàng xóm, không lấn chiếm bất hợp pháp.</li>
+                    </ul>
+                </div>
+
+                <!-- Group 4 -->
+                <div class="glass p-8 rounded-[2.5rem] border-white/5 rule-card transition-all duration-300">
+                    <div class="w-14 h-14 bg-sky-500/20 rounded-2xl flex items-center justify-center text-sky-400 mb-6">
+                        <i data-lucide="hammer" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-6">Hình phạt</h3>
+                    <ul class="space-y-4 text-slate-400 leading-relaxed">
+                        <li class="flex gap-4"><span class="text-sky-500 font-bold">01.</span> Cảnh cáo/Mute cho các vi phạm nhẹ lần đầu.</li>
+                        <li class="flex gap-4"><span class="text-sky-500 font-bold">02.</span> Ban có thời hạn cho các hành vi tái phạm nhiều lần.</li>
+                        <li class="flex gap-4"><span class="text-sky-500 font-bold">03.</span> Ban vĩnh viễn cho hành vi hack/cheat hoặc phá hoại server.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-20 p-8 rounded-3xl bg-sky-500/10 border border-sky-500/20 text-center">
+                <p class="text-slate-300 italic leading-relaxed">"Việc tham gia server đồng nghĩa với việc bạn đã đồng ý với toàn bộ nội quy trên. Ban Quản Trị có quyền đưa ra quyết định cuối cùng trong mọi trường hợp tranh chấp."</p>
+            </div>
+
+            <div class="mt-12 text-center">
+                <button onclick="window.location.href='index.html'" class="px-8 py-4 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-bold border border-white/10 transition-all flex items-center gap-2 mx-auto">
+                    <i data-lucide="arrow-left" class="w-5 h-5"></i> Quay lại Trang chủ
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 border-t border-white/5 text-center text-slate-600 text-sm">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p>&copy; 2024 Rampart SMP. All rights reserved.</p>
+            <div class="flex gap-6">
+                <a href="index.html" class="hover:text-sky-400 transition-colors">Trang chủ</a>
+                <a href="rules.html" class="text-sky-400 font-bold">Luật lệ</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        
+        // Mobile Menu Logic
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+
+        function toggleMenu() {
+            mobileMenu.classList.toggle('hidden');
+            const isHidden = mobileMenu.classList.contains('hidden');
+            menuIcon.setAttribute('data-lucide', isHidden ? 'menu' : 'x');
+            lucide.createIcons();
+        }
+
+        if(menuBtn) menuBtn.addEventListener('click', toggleMenu);
+    </script>
+</body>
+</html>
