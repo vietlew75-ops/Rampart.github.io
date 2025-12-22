@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trạng thái Máy chủ | Rampart SMP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #f1f5f9; }
+        .glass { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .bg-grid { background-image: radial-gradient(circle at 2px 2px, rgba(14, 165, 233, 0.08) 1px, transparent 0); background-size: 40px 40px; }
+        .status-glow-online { box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
+        .status-glow-offline { box-shadow: 0 0 20px rgba(239, 68, 68, 0.2); }
+        @keyframes pulse-soft { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        .animate-pulse-soft { animation: pulse-soft 2s infinite; }
+    </style>
+</head>
+<body class="antialiased overflow-x-hidden bg-grid min-h-screen">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 w-full z-50 glass py-4 shadow-2xl">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center gap-2 group cursor-pointer" onclick="window.location.href='index.html'">
+                <div class="w-10 h-10 bg-sky-500 rounded-lg flex items-center justify-center shadow-lg shadow-sky-500/20 group-hover:scale-110 transition-transform">
+                    <i data-lucide="server" class="text-white w-6 h-6"></i>
+                </div>
+                <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white to-sky-400 bg-clip-text text-transparent">RAMPART <span class="text-sky-400">SMP</span></span>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+                <a href="index.html" class="text-slate-400 hover:text-sky-400 transition-colors">Trang chủ</a>
+                <a href="rules.html" class="text-slate-400 hover:text-sky-400 transition-colors">Luật lệ</a>
+                <a href="updates.html" class="text-slate-400 hover:text-sky-400 transition-colors">Cập nhật</a>
+                <a href="status.html" class="text-sky-400 transition-colors">Trạng thái</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="pt-40 pb-24 px-6">
+        <div class="container mx-auto max-w-4xl">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                <div>
+                    <h1 class="text-4xl md:text-5xl font-black text-white mb-3">Hệ thống</h1>
+                    <p class="text-slate-400">Theo dõi hiệu năng và trạng thái thời gian thực.</p>
+                </div>
+                <div id="last-updated-container" class="hidden flex items-center gap-2 text-xs font-bold text-slate-500 bg-white/5 px-4 py-2 rounded-full border border-white/5">
+                    <i data-lucide="clock" class="w-3 h-3"></i> Cập nhật: <span id="last-updated">-</span>
+                </div>
+            </div>
+
+            <!-- Main Status Card -->
+            <div id="status-container" class="relative group">
+                <!-- Loading State -->
+                <div id="loading" class="glass rounded-[2.5rem] p-20 flex flex-col items-center justify-center border-white/5">
+                    <div class="w-12 h-12 border-4 border-sky-500/20 border-t-sky-500 rounded-full animate-spin mb-6"></div>
+                    <p class="text-slate-400 font-medium animate-pulse-soft">Đang kết nối tới server...</p>
+                </div>
+
+                <!-- Content State -->
+                <div id="status-content" class="hidden space-y-6">
+                    <!-- Top Summary Card -->
+                    <div class="glass rounded-[2.5rem] p-8 md:p-10 border-white/5 transition-all duration-500" id="main-card">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                            <div class="flex items-center gap-5">
+                                <div id="status-icon-bg" class="w-16 h-16 rounded-2xl flex items-center justify-center transition-colors duration-500">
+                                    <i data-lucide="activity" id="status-icon" class="w-8 h-8"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Địa chỉ máy chủ</div>
+                                    <div class="text-2xl font-mono font-black text-white">rampartsmp.giize.com</div>
+                                </div>
+                            </div>
+                            <div id="server-badge" class="px-6 py-3 rounded-2xl text-sm font-black tracking-widest uppercase transition-all duration-500">
+                                <!-- Online/Offline text -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Players Card -->
+                        <div class="glass rounded-[2rem] p-8 border-white/5 hover:border-white/10 transition-colors">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="w-10 h-10 bg-sky-500/10 rounded-xl flex items-center justify-center text-sky-400">
+                                    <i data-lucide="users"></i>
+                                </div>
+                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Players</span>
+                            </div>
+                            <div class="text-3xl font-black text-white mb-4" id="players-count">0 / 0</div>
+                            <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                                <div id="players-bar" class="h-full bg-sky-500 transition-all duration-1000" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Version Card -->
+                        <div class="glass rounded-[2rem] p-8 border-white/5 hover:border-white/10 transition-colors">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="w-10 h-10 bg-indigo-500/10 rounded-xl flex items-center justify-center text-indigo-400">
+                                    <i data-lucide="layers"></i>
+                                </div>
+                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Software</span>
+                            </div>
+                            <div class="text-2xl font-black text-white" id="version-text">-</div>
+                            <div class="text-xs text-slate-500 mt-2">Java Edition</div>
+                        </div>
+
+                        <!-- Latency Card (Simulated/Static for UI) -->
+                        <div class="glass rounded-[2rem] p-8 border-white/5 hover:border-white/10 transition-colors">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-400">
+                                    <i data-lucide="signal"></i>
+                                </div>
+                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Network</span>
+                            </div>
+                            <div class="text-2xl font-black text-white">Ổn định</div>
+                            <div class="text-xs text-emerald-500/80 mt-2 font-bold flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Tối ưu tại VN
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 flex flex-col items-center gap-6">
+                <button onclick="fetchStatus()" class="group flex items-center gap-3 px-8 py-4 rounded-2xl bg-sky-500 hover:bg-sky-400 text-white font-bold transition-all shadow-lg shadow-sky-500/20 active:scale-95">
+                    <i data-lucide="refresh-cw" class="w-5 h-5 group-active:rotate-180 transition-transform"></i>
+                    Làm mới dữ liệu
+                </button>
+                <p class="text-slate-600 text-xs">Dữ liệu được cung cấp bởi mcstatus.io API</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 text-center text-slate-600 text-sm border-t border-white/5 mt-20">
+        <p>&copy; 2024 Rampart SMP. Website Status Dashboard.</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        async function fetchStatus() {
+            const loading = document.getElementById('loading');
+            const content = document.getElementById('status-content');
+            const updatedContainer = document.getElementById('last-updated-container');
+            
+            loading.classList.remove('hidden');
+            content.classList.add('hidden');
+            updatedContainer.classList.add('hidden');
+
+            try {
+                const response = await fetch('https://api.mcstatus.io/v2/status/java/rampartsmp.giize.com');
+                const data = await response.json();
+
+                const badge = document.getElementById('server-badge');
+                const mainCard = document.getElementById('main-card');
+                const iconBg = document.getElementById('status-icon-bg');
+                const icon = document.getElementById('status-icon');
+                
+                const playersCount = document.getElementById('players-count');
+                const playersBar = document.getElementById('players-bar');
+                const versionText = document.getElementById('version-text');
+                const lastUpdated = document.getElementById('last-updated');
+
+                if (data.online) {
+                    badge.innerText = 'Máy chủ Online';
+                    badge.className = 'px-6 py-3 rounded-2xl text-sm font-black tracking-widest uppercase bg-emerald-500 text-white shadow-xl shadow-emerald-500/20';
+                    mainCard.className = 'glass rounded-[2.5rem] p-8 md:p-10 border-emerald-500/20 status-glow-online transition-all duration-500';
+                    iconBg.className = 'w-16 h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400 transition-colors duration-500';
+                    
+                    playersCount.innerText = `${data.players.online} / ${data.players.max}`;
+                    const percent = (data.players.online / data.players.max) * 100;
+                    playersBar.style.width = `${Math.max(percent, 5)}%`;
+                    playersBar.className = 'h-full bg-emerald-500 transition-all duration-1000';
+                    
+                    versionText.innerText = data.version.name_clean || '1.21.10';
+                } else {
+                    badge.innerText = 'Máy chủ Offline';
+                    badge.className = 'px-6 py-3 rounded-2xl text-sm font-black tracking-widest uppercase bg-red-500 text-white shadow-xl shadow-red-500/20';
+                    mainCard.className = 'glass rounded-[2.5rem] p-8 md:p-10 border-red-500/20 status-glow-offline transition-all duration-500';
+                    iconBg.className = 'w-16 h-16 bg-red-500/20 rounded-2xl flex items-center justify-center text-red-400 transition-colors duration-500';
+                    
+                    playersCount.innerText = '0 / 0';
+                    playersBar.style.width = `0%`;
+                    versionText.innerText = 'Không rõ';
+                }
+
+                lastUpdated.innerText = new Date().toLocaleTimeString('vi-VN');
+                loading.classList.add('hidden');
+                content.classList.remove('hidden');
+                updatedContainer.classList.remove('hidden');
+                
+                lucide.createIcons();
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loading').innerHTML = `
+                    <i data-lucide="alert-circle" class="w-12 h-12 text-red-500 mb-4"></i>
+                    <p class="text-red-400 font-bold">Không thể kết nối API</p>
+                    <button onclick="fetchStatus()" class="mt-4 text-sky-400 text-sm underline">Thử lại</button>
+                `;
+                lucide.createIcons();
+            }
+        }
+
+        // Tự động tải dữ liệu lần đầu
+        fetchStatus();
+        
+        // Tự động làm mới mỗi 60 giây
+        setInterval(fetchStatus, 60000);
+    </script>
+</body>
+</html>
