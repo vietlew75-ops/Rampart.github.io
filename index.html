@@ -14,24 +14,61 @@
         .glass { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .text-glow { text-shadow: 0 0 20px rgba(14, 165, 233, 0.5); }
         .bg-grid { background-image: radial-gradient(circle at 2px 2px, rgba(14, 165, 233, 0.08) 1px, transparent 0); background-size: 40px 40px; }
-        @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(5deg); } }
-        .float-anim { animation: float 4s ease-in-out infinite; }
-        .float-slow { animation: float 6s ease-in-out infinite; }
-        .ip-glow:hover { box-shadow: 0 0 25px rgba(14, 165, 233, 0.3); border-color: rgba(14, 165, 233, 0.5); }
+        
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            50% { transform: translateY(-30px) rotate(15deg) scale(1.05); }
+        }
+        @keyframes float-alt {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1.05); }
+            50% { transform: translateY(-20px) rotate(-10deg) scale(1); }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.1; transform: scale(1); }
+            50% { opacity: 0.2; transform: scale(1.1); }
+        }
+        @keyframes draw-glow-burst {
+            0% { 
+                box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.7); 
+                outline: 2px solid rgba(14, 165, 233, 1); 
+                outline-offset: -4px;
+            }
+            100% { 
+                box-shadow: 0 0 40px 20px rgba(14, 165, 233, 0); 
+                outline: 2px solid rgba(14, 165, 233, 0); 
+                outline-offset: 20px;
+            }
+        }
+
+        .float-anim { animation: float 6s ease-in-out infinite; }
+        .float-slow { animation: float-alt 8s ease-in-out infinite; }
+        .pulse-slow { animation: pulse-glow 10s ease-in-out infinite; }
+
+        /* Interactive Effects */
+        .btn-glow {
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-glow:hover {
+            box-shadow: 0 0 25px rgba(14, 165, 233, 0.4);
+            transform: translateY(-2px);
+            border-color: rgba(14, 165, 233, 0.5);
+        }
+        .btn-glow:active {
+            transform: scale(0.95);
+        }
+        .click-draw {
+            animation: draw-glow-burst 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+        }
+
         #back-to-top.visible { opacity: 1; transform: translateY(0); }
         #explore-indicator { transition: opacity 0.5s ease, transform 0.5s ease; }
         #explore-indicator.hidden-scroll { opacity: 0; transform: translateY(20px); pointer-events: none; }
     </style>
+<link rel="stylesheet" href="/index.css">
 </head>
 <body class="antialiased overflow-x-hidden bg-grid">
-
-    <!-- Background Elements -->
-    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div class="absolute top-1/4 left-10 text-sky-500/10 float-anim"><i data-lucide="pickaxe" class="w-20 h-20"></i></div>
-        <div class="absolute top-1/3 right-10 text-sky-500/10 float-slow"><i data-lucide="swords" class="w-24 h-24"></i></div>
-        <div class="absolute bottom-1/4 left-1/4 text-sky-500/10 float-slow"><i data-lucide="box" class="w-16 h-16"></i></div>
-        <div class="absolute top-2/3 right-1/4 text-sky-500/10 float-anim"><i data-lucide="gem" class="w-14 h-14"></i></div>
-    </div>
 
     <!-- Navigation -->
     <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300 py-6">
@@ -47,8 +84,9 @@
                 <a href="index.html#home" class="flex items-center gap-1 text-sm font-medium text-slate-400 hover:text-sky-400 transition-colors">Trang chủ</a>
                 <a href="rules.html" class="flex items-center gap-1 text-sm font-medium text-slate-400 hover:text-sky-400 transition-colors">Luật lệ</a>
                 <a href="updates.html" class="flex items-center gap-1 text-sm font-medium text-slate-400 hover:text-sky-400 transition-colors">Cập nhật</a>
+                <a href="staff.html" class="flex items-center gap-1 text-sm font-medium text-slate-400 hover:text-sky-400 transition-colors">Staff</a>
                 <a href="status.html" class="flex items-center gap-1 text-sm font-medium text-slate-400 hover:text-sky-400 transition-colors">Trạng thái</a>
-                <button onclick="copyIP()" class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-sky-500 hover:bg-sky-400 text-white text-sm font-semibold transition-all shadow-lg shadow-sky-500/25 active:scale-95"><i data-lucide="play-circle" class="w-4 h-4"></i> Tham gia</button>
+                <button onclick="copyIP(this)" class="btn-glow flex items-center gap-2 px-5 py-2.5 rounded-full bg-sky-500 hover:bg-sky-400 text-white text-sm font-semibold transition-all shadow-lg shadow-sky-500/25"><i data-lucide="play-circle" class="w-4 h-4"></i> Tham gia</button>
             </div>
 
             <button class="md:hidden text-slate-200" id="menu-btn"><i data-lucide="menu" id="menu-icon"></i></button>
@@ -59,13 +97,24 @@
             <a href="index.html#home" class="text-lg font-medium text-slate-300 py-2" onclick="toggleMenu()">Trang chủ</a>
             <a href="rules.html" class="text-lg font-medium text-slate-300 py-2" onclick="toggleMenu()">Luật lệ</a>
             <a href="updates.html" class="text-lg font-medium text-slate-300 py-2" onclick="toggleMenu()">Cập nhật</a>
+            <a href="staff.html" class="text-lg font-medium text-slate-300 py-2" onclick="toggleMenu()">Staff</a>
             <a href="status.html" class="text-lg font-medium text-slate-300 py-2" onclick="toggleMenu()">Trạng thái</a>
-            <button onclick="copyIP(); toggleMenu();" class="flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-sky-500 text-white font-bold"><i data-lucide="copy" class="w-5 h-5"></i> Sao chép IP</button>
+            <button onclick="copyIP(this); toggleMenu();" class="btn-glow flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-sky-500 text-white font-bold"><i data-lucide="copy" class="w-5 h-5"></i> Sao chép IP</button>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="relative pt-44 pb-32 px-6 overflow-visible">
+    <section id="home" class="relative pt-44 pb-32 px-6 overflow-hidden">
+        <!-- Decoration Icons (Only in Header) -->
+        <div class="absolute inset-0 pointer-events-none z-0">
+            <div class="absolute top-10 left-[5%] text-sky-500/10 float-anim"><i data-lucide="pickaxe" class="w-32 h-32"></i></div>
+            <div class="absolute top-20 right-[5%] text-sky-500/10 float-slow"><i data-lucide="swords" class="w-36 h-36"></i></div>
+            <div class="absolute bottom-10 left-[15%] text-sky-500/10 float-slow"><i data-lucide="box" class="w-24 h-24"></i></div>
+            <div class="absolute top-1/2 right-[15%] text-sky-500/10 float-anim"><i data-lucide="gem" class="w-20 h-20"></i></div>
+            <!-- Extra glow points -->
+            <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-sky-500/5 rounded-full blur-[120px] pulse-slow"></div>
+        </div>
+
         <div class="container mx-auto text-center relative z-10">
             <a href="status.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border-sky-500/30 text-sky-400 text-xs font-bold tracking-widest uppercase mb-8 hover:bg-sky-500/10 transition-colors cursor-pointer group">
                 <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span> Server đang Online
@@ -74,9 +123,9 @@
             <h1 class="text-5xl md:text-8xl font-black mb-6 tracking-tight leading-tight">Xây dựng huyền thoại tại <br /><span class="bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-400 bg-clip-text text-transparent text-glow">Rampart SMP</span></h1>
             <p class="max-w-2xl mx-auto text-slate-400 text-lg md:text-xl mb-12 leading-relaxed">Trải nghiệm Vanilla+ đỉnh cao phiên bản 1.21.10. <br class="hidden md:block"/>Khám phá, xây dựng và chinh phục cùng cộng đồng không bao giờ ngủ.</p>
             <div class="flex flex-col items-center gap-4">
-                <div class="group relative flex items-center gap-4 p-1 pl-6 rounded-2xl glass border-white/5 w-full max-w-lg overflow-hidden ip-glow transition-all duration-500">
+                <div class="group relative flex items-center gap-4 p-1 pl-6 rounded-2xl glass border-white/5 w-full max-w-lg overflow-hidden transition-all duration-500 hover:border-sky-500/30">
                     <span id="ip-text" class="text-sky-400 font-mono font-bold tracking-wider text-lg">rampartsmp.giize.com</span>
-                    <button id="copy-btn" onclick="copyIP()" class="flex items-center gap-2 px-6 py-4 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold transition-all duration-300 ml-auto shadow-inner"><i data-lucide="copy" class="w-5 h-5" id="copy-icon"></i><span id="copy-text">Copy IP</span></button>
+                    <button id="copy-btn" onclick="copyIP(this)" class="btn-glow flex items-center gap-2 px-6 py-4 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold transition-all duration-300 ml-auto shadow-inner"><i data-lucide="copy" class="w-5 h-5" id="copy-icon"></i><span id="copy-text">Copy IP</span></button>
                 </div>
                 <div class="flex flex-wrap justify-center gap-6 mt-4">
                     <div class="flex items-center gap-2 text-slate-300 bg-white/5 px-4 py-1.5 rounded-full border border-white/5 text-sm"><i data-lucide="tag" class="w-4 h-4 text-sky-400"></i> <span>Ver: <b>1.21.10</b></span></div>
@@ -97,7 +146,7 @@
             <div class="text-center group"><i data-lucide="binary" class="w-6 h-6 mx-auto mb-3 text-sky-500/50 group-hover:text-sky-400 transition-colors"></i><div class="text-2xl font-bold text-white mb-1">1.21.10</div><div class="text-xs text-slate-500 font-bold uppercase tracking-widest">Phiên bản</div></div>
             <div class="text-center group"><i data-lucide="zap" class="w-6 h-6 mx-auto mb-3 text-sky-500/50 group-hover:text-sky-400 transition-colors"></i><div class="text-2xl font-bold text-white mb-1">99.9%</div><div class="text-xs text-slate-500 font-bold uppercase tracking-widest">Uptime</div></div>
             <div class="text-center group"><i data-lucide="sword" class="w-6 h-6 mx-auto mb-3 text-sky-500/50 group-hover:text-sky-400 transition-colors"></i><div class="text-2xl font-bold text-white mb-1">Survival</div><div class="text-xs text-slate-500 font-bold uppercase tracking-widest">Lối chơi</div></div>
-            <div class="text-center group"><i data-lucide="signal" class="w-6 h-6 mx-auto mb-3 text-sky-500/50 group-hover:text-sky-400 transition-colors"></i><div class="text-2xl font-bold text-white mb-1">Low Ping</div><div class="text-xs text-slate-500 font-bold uppercase tracking-widest">Vietnam</div></div>
+            <div class="text-center group"><i data-lucide="signal" class="w-6 h-6 mx-auto mb-3 text-sky-500/50 group-hover:text-sky-400 transition-colors"></i><div class="text-2xl font-bold text-white mb-1">Low Ping</div><div class="text-xs text-slate-500 font-bold uppercase tracking-widest">Singapore</div></div>
         </div>
     </section>
 
@@ -138,8 +187,8 @@
                     <h2 class="text-4xl md:text-6xl font-black mb-8 text-white tracking-tight">Cộng đồng của <br />chúng ta.</h2>
                     <p class="text-slate-400 text-lg mb-10 leading-relaxed">Tham gia Discord để cập nhật thông báo, báo cáo lỗi hoặc đơn giản là trò chuyện cùng bạn bè.</p>
                     <div class="flex flex-wrap gap-4">
-                        <button class="px-8 py-4 rounded-2xl bg-[#5865F2] hover:bg-[#4752C4] hover:scale-105 active:scale-95 text-white font-bold transition-all flex items-center gap-3 shadow-lg shadow-indigo-500/20"><i data-lucide="message-square"></i> Discord Server</button>
-                        <button class="px-8 py-4 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-bold transition-all border border-white/10 flex items-center gap-2 group"><i data-lucide="map" class="text-sky-400"></i> Xem Map Live <i data-lucide="external-link" class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all"></i></button>
+                        <button class="btn-glow px-8 py-4 rounded-2xl bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold transition-all flex items-center gap-3 shadow-lg shadow-indigo-500/20" onclick="animateClick(this)"><i data-lucide="message-square"></i> Discord Server</button>
+                        <button class="btn-glow px-8 py-4 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-bold transition-all border border-white/10 flex items-center gap-2 group" onclick="animateClick(this)"><i data-lucide="map" class="text-sky-400"></i> Xem Map Live <i data-lucide="external-link" class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all"></i></button>
                     </div>
                 </div>
                 <div class="relative group">
@@ -154,20 +203,23 @@
         </div>
     </section>
 
-    <!-- Update Log Highlight (Bottom) -->
+    <!-- Update Log Highlight (Bottom) - Updated with synchronized glow effect -->
     <section class="py-24 px-6 relative z-10 mb-12">
-        <div class="container mx-auto max-w-4xl glass p-8 md:p-12 rounded-[2.5rem] border-white/5">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+        <div class="container mx-auto max-w-4xl glass p-8 md:p-12 rounded-[3.5rem] border-white/5 group hover:border-sky-500/30 transition-all duration-500 hover:shadow-[0_0_50px_rgba(14,165,233,0.1)]">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-12">
                 <div class="flex-1 text-center md:text-left">
-                    <div class="text-sky-500 font-bold text-xs tracking-widest uppercase mb-2">Bản cập nhật mới nhất (2025)</div>
-                    <h2 class="text-3xl font-black text-white mb-4">Patch fix plugins chưa hoạt động</h2>
-                    <p class="text-slate-400 mb-6 leading-relaxed">Khắc phục triệt để các sự cố liên quan đến hệ thống plugin cốt lõi, đảm bảo máy chủ vận hành mượt mà và ổn định nhất cho năm 2025.</p>
-                    <a href="updates.html" class="inline-flex items-center gap-2 text-sky-400 font-bold hover:text-sky-300 transition-colors">
-                        Xem chi tiết nhật ký cập nhật <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    <div class="text-sky-400 font-extrabold text-xs tracking-[0.3em] uppercase mb-4 opacity-70">Bản cập nhật mới nhất (2025)</div>
+                    <h2 class="text-4xl font-black text-white mb-6 leading-tight group-hover:text-sky-400 transition-colors duration-500">Patch fix plugins chưa hoạt động</h2>
+                    <p class="text-slate-400 mb-10 leading-relaxed text-lg font-medium opacity-80">Khắc phục triệt để các sự cố liên quan đến hệ thống plugin cốt lõi, đảm bảo máy chủ vận hành mượt mà và ổn định nhất cho năm 2025.</p>
+                    <a href="updates.html" class="inline-flex items-center gap-3 text-sky-400 font-black text-sm uppercase tracking-widest hover:text-sky-300 transition-all group/link">
+                        <span>Xem chi tiết nhật ký cập nhật</span>
+                        <i data-lucide="arrow-right" class="w-5 h-5 group-hover/link:translate-x-2 transition-transform"></i>
                     </a>
                 </div>
-                <div class="w-full md:w-48 aspect-square rounded-3xl bg-sky-500/10 flex items-center justify-center border border-sky-500/20">
-                    <i data-lucide="wrench" class="w-20 h-20 text-sky-400/50"></i>
+                <div class="w-full md:w-56 aspect-square rounded-[2.5rem] bg-[#0c162d] flex items-center justify-center border border-white/5 shadow-2xl relative overflow-hidden group-hover:border-sky-500/40 transition-all duration-500">
+                    <!-- Internal glow for icon container -->
+                    <div class="absolute inset-0 bg-sky-500/0 group-hover:bg-sky-500/10 transition-all duration-500"></div>
+                    <i data-lucide="wrench" class="w-24 h-24 text-sky-400/40 group-hover:text-sky-400 group-hover:drop-shadow-[0_0_25px_rgba(14,165,233,0.8)] transition-all duration-500 group-hover:scale-110"></i>
                 </div>
             </div>
         </div>
@@ -186,6 +238,7 @@
                         <h4 class="text-white font-bold text-sm uppercase tracking-widest">Liên kết</h4>
                         <a href="rules.html" class="text-slate-500 hover:text-sky-400 text-sm transition-colors">Luật lệ</a>
                         <a href="updates.html" class="text-slate-500 hover:text-sky-400 text-sm transition-colors">Cập nhật</a>
+                        <a href="staff.html" class="text-slate-500 hover:text-sky-400 text-sm transition-colors">Staff</a>
                         <a href="status.html" class="text-slate-500 hover:text-sky-400 text-sm transition-colors">Trạng thái</a>
                     </div>
                     <div class="flex flex-col gap-4">
@@ -207,32 +260,43 @@
     <script>
         lucide.createIcons();
         const ip = "rampartsmp.giize.com";
+
+        function animateClick(el) {
+            el.classList.remove('click-draw');
+            void el.offsetWidth; // Trigger reflow
+            el.classList.add('click-draw');
+            setTimeout(() => el.classList.remove('click-draw'), 600);
+        }
+
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
             const backToTop = document.getElementById('back-to-top');
             const explore = document.getElementById('explore-indicator');
             
-            // Navbar effect
-            if (window.scrollY > 50) { 
-                navbar.classList.add('glass', 'py-4', 'shadow-2xl'); 
-                navbar.classList.remove('py-6'); 
-            } else { 
-                navbar.classList.remove('glass', 'py-4', 'shadow-2xl'); 
-                navbar.classList.add('py-6'); 
+            if (navbar) {
+                if (window.scrollY > 50) { 
+                    navbar.classList.add('glass', 'py-4', 'shadow-2xl'); 
+                    navbar.classList.remove('py-6'); 
+                } else { 
+                    navbar.classList.remove('glass', 'py-4', 'shadow-2xl'); 
+                    navbar.classList.add('py-6'); 
+                }
             }
             
-            // Back to top button
-            if (window.scrollY > 500) { 
-                backToTop.classList.add('visible'); 
-            } else { 
-                backToTop.classList.remove('visible'); 
+            if (backToTop) {
+                if (window.scrollY > 500) { 
+                    backToTop.classList.add('visible'); 
+                } else { 
+                    backToTop.classList.remove('visible'); 
+                }
             }
 
-            // Explore indicator fade out
-            if (window.scrollY > 100) {
-                explore.classList.add('hidden-scroll');
-            } else {
-                explore.classList.remove('hidden-scroll');
+            if (explore) {
+                if (window.scrollY > 100) {
+                    explore.classList.add('hidden-scroll');
+                } else {
+                    explore.classList.remove('hidden-scroll');
+                }
             }
         });
 
@@ -241,29 +305,43 @@
         const menuIcon = document.getElementById('menu-icon');
         
         function toggleMenu() {
-            mobileMenu.classList.toggle('hidden');
-            const isHidden = mobileMenu.classList.contains('hidden');
-            menuIcon.setAttribute('data-lucide', isHidden ? 'menu' : 'x');
-            lucide.createIcons();
+            if (mobileMenu) mobileMenu.classList.toggle('hidden');
+            if (menuIcon) {
+                const isHidden = mobileMenu ? mobileMenu.classList.contains('hidden') : true;
+                menuIcon.setAttribute('data-lucide', isHidden ? 'menu' : 'x');
+                lucide.createIcons();
+            }
         }
         
-        menuBtn.addEventListener('click', toggleMenu);
+        if (menuBtn) menuBtn.addEventListener('click', toggleMenu);
         
-        function copyIP() {
+        function copyIP(el) {
+            animateClick(el);
             navigator.clipboard.writeText(ip).then(() => {
                 const copyBtn = document.getElementById('copy-btn');
                 const copyText = document.getElementById('copy-text');
                 const copyIcon = document.getElementById('copy-icon');
-                copyBtn.classList.remove('bg-sky-500'); copyBtn.classList.add('bg-emerald-500');
-                copyText.innerText = "Đã copy!"; copyIcon.setAttribute('data-lucide', 'check');
+                
+                if (copyBtn) {
+                    copyBtn.classList.remove('bg-sky-500'); 
+                    copyBtn.classList.add('bg-emerald-500');
+                }
+                if (copyText) copyText.innerText = "Đã copy!"; 
+                if (copyIcon) copyIcon.setAttribute('data-lucide', 'check');
                 lucide.createIcons();
+                
                 setTimeout(() => {
-                    copyBtn.classList.add('bg-sky-500'); copyBtn.classList.remove('bg-emerald-500');
-                    copyText.innerText = "Copy IP"; copyIcon.setAttribute('data-lucide', 'copy');
+                    if (copyBtn) {
+                        copyBtn.classList.add('bg-sky-500'); 
+                        copyBtn.classList.remove('bg-emerald-500');
+                    }
+                    if (copyText) copyText.innerText = "Copy IP"; 
+                    if (copyIcon) copyIcon.setAttribute('data-lucide', 'copy');
                     lucide.createIcons();
                 }, 2000);
             });
         }
     </script>
+<script type="module" src="/index.tsx"></script>
 </body>
 </html>
